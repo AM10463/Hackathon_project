@@ -1,0 +1,283 @@
+/* ============================================
+   SkillBridge — script.js
+   Beginner-friendly, commented for demo/viva.
+   Covers: querySelector, addEventListener,
+   classList, arrays, objects, forEach, textContent
+   ============================================ */
+
+/* ---------- 1. Mobile menu toggle ---------- */
+const hamburgerBtn = document.querySelector("#hamburgerBtn");
+const navLinks = document.querySelector("#navLinks");
+
+hamburgerBtn.addEventListener("click", function () {
+  navLinks.classList.toggle("open");
+  hamburgerBtn.classList.toggle("open");
+
+  const isOpen = navLinks.classList.contains("open");
+  hamburgerBtn.setAttribute("aria-expanded", isOpen);
+});
+
+// Close the mobile menu after a link is tapped
+const allNavLinks = document.querySelectorAll("#navLinks a");
+allNavLinks.forEach(function (link) {
+  link.addEventListener("click", function () {
+    navLinks.classList.remove("open");
+    hamburgerBtn.classList.remove("open");
+  });
+});
+
+/* ---------- 2. Persona switcher (Student / Academician / Industry) ---------- */
+
+// One object per role. Keeping this as data (not hardcoded HTML)
+// makes it easy for the team to edit copy without touching markup.
+const personaData = {
+  student: {
+    headline: "Dream job. So many questions.",
+    image: "../images/student_split.png",
+    problems: [
+      "Will I get my dream job?",
+      "Am I learning the exact skills required?",
+      "Will my resume get rejected?",
+      "Should I add more certificates?"
+    ],
+    solutions: [
+      "Role-based skill mapping",
+      "Build the exact skills employers want",
+      "A strong, verified profile",
+      "Proof of skill, not just certificates"
+    ]
+  },
+  academician: {
+    headline: "Am I teaching what industry really needs?",
+    image: "../images/academician_split.png",
+    problems: [
+      "Is what I'm teaching relevant to industry?",
+      "Am I updating course content often enough?",
+      "Where do I find mentorship and industry experts?",
+      "How do I stay informed on the latest trends?"
+    ],
+    solutions: [
+      "Access to industry-relevant training programs",
+      "Direct connection with industry mentors",
+      "Real-time updates on industry trends",
+      "Practical insight to align curriculum"
+    ]
+  },
+  industry: {
+    headline: "So many resumes. So little real talent.",
+    image: "../images/industry-split.png",
+    problems: [
+      "How do I find the best candidate for the job?",
+      "Are these certificates real or bought online?",
+      "How do I actually assess true skills?",
+      "With so many applications, where do I start?"
+    ],
+    solutions: [
+      "Pre-verified skill profiles & certifications",
+      "AI-assisted skill matching",
+      "Direct access to internships & projects",
+      "Real-time updates on industry trends"
+    ]
+  }
+};
+
+const personaTabs = document.querySelectorAll(".persona-tab");
+const personaImg = document.querySelector("#personaImg");
+const personaHeadline = document.querySelector("#personaHeadline");
+const personaProblems = document.querySelector("#personaProblems");
+const personaSolutions = document.querySelector("#personaSolutions");
+
+function renderPersona(role) {
+  const data = personaData[role];
+  if (!data) return;
+
+  personaHeadline.textContent = data.headline;
+  personaImg.src = data.image;
+  personaImg.alt = "Illustration for the " + role + " persona on SkillBridge";
+
+  // Rebuild the "Right now" list
+  personaProblems.innerHTML = "";
+  data.problems.forEach(function (line) {
+    const li = document.createElement("li");
+    li.textContent = line;
+    personaProblems.appendChild(li);
+  });
+
+  // Rebuild the "With SkillBridge" list
+  personaSolutions.innerHTML = "";
+  personaSolutions.classList.add("solutions");
+  data.solutions.forEach(function (line) {
+    const li = document.createElement("li");
+    li.textContent = line;
+    personaSolutions.appendChild(li);
+  });
+}
+
+personaTabs.forEach(function (tab) {
+  tab.addEventListener("click", function () {
+    // Update active tab styling
+    personaTabs.forEach(function (t) {
+      t.classList.remove("active");
+      t.setAttribute("aria-selected", "false");
+    });
+    tab.classList.add("active");
+    tab.setAttribute("aria-selected", "true");
+
+    // Swap the panel content
+    const role = tab.getAttribute("data-role");
+    renderPersona(role);
+  });
+});
+
+// Render the default (student) view on page load
+renderPersona("student");
+
+/* ---------- 3. FAQ accordion ---------- */
+const faqItems = document.querySelectorAll(".faq-item");
+
+faqItems.forEach(function (item) {
+  const question = item.querySelector(".faq-q");
+  const answer = item.querySelector(".faq-a");
+
+  question.addEventListener("click", function () {
+    const isOpen = item.classList.contains("open");
+
+    // Close every item first (accordion behaviour: one open at a time)
+    faqItems.forEach(function (otherItem) {
+      otherItem.classList.remove("open");
+      otherItem.querySelector(".faq-a").style.maxHeight = null;
+    });
+
+    // Re-open the clicked item if it wasn't already open
+    if (!isOpen) {
+      item.classList.add("open");
+      answer.style.maxHeight = answer.scrollHeight + "px";
+    }
+  });
+});
+
+/* ---------- 4. Hero buttons scroll to the relevant section ---------- */
+const assessBtn = document.querySelector("#assessBtn");
+const explorePortalsBtn = document.querySelector("#explorePortalsBtn");
+
+if (assessBtn) {
+  assessBtn.addEventListener("click", function () {
+    document.querySelector("#personas").scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+if (explorePortalsBtn) {
+  explorePortalsBtn.addEventListener("click", function () {
+    document.querySelector("#personas").scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+/* ---------- 5. Backend-connected student workspace ---------- */
+const API_BASE = window.location.port === "8000" || window.location.pathname === "/portal"
+  ? ""
+  : "http://localhost:8000";
+const apiStatus = document.querySelector("#apiStatus");
+const opportunitiesList = document.querySelector("#opportunitiesList");
+const loginForm = document.querySelector("#loginForm");
+const registerForm = document.querySelector("#registerForm");
+const authMessage = document.querySelector("#authMessage");
+const studentData = document.querySelector("#studentData");
+const skillGapCount = document.querySelector("#skillGapCount");
+let currentStudentId = null;
+
+async function apiRequest(path, options) {
+  const response = await fetch(API_BASE + path, options);
+  const payload = await response.json().catch(function () { return {}; });
+  if (!response.ok) throw new Error(payload.detail || "The server returned an error.");
+  return payload;
+}
+
+function renderOpportunities(opportunities) {
+  if (!opportunities.length) {
+    opportunitiesList.innerHTML = "<p>No internships have been published yet.</p>";
+    return;
+  }
+  opportunitiesList.innerHTML = opportunities.map(function (opportunity) {
+    return `<article class="opportunity-item"><div><h4>${opportunity.title}</h4><p>${opportunity.location || "Location flexible"} · ${opportunity.duration || "Flexible duration"}</p><small>${opportunity.required_skills || "Skills to be discussed"}</small></div><button class="btn btn-primary apply-btn" data-id="${opportunity.id}" type="button">Apply</button></article>`;
+  }).join("");
+  document.querySelectorAll(".apply-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      if (!currentStudentId) {
+        authMessage.textContent = "Log in first to apply for an opportunity.";
+        loginForm.querySelector("input").focus();
+        return;
+      }
+      apiRequest("/applications", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("skillbridge_token") }, body: JSON.stringify({ student_id: currentStudentId, internship_id: Number(button.dataset.id) }) })
+        .then(function () { button.textContent = "Applied"; button.disabled = true; })
+        .catch(function (error) { authMessage.textContent = error.message; });
+    });
+  });
+}
+
+async function loadLiveData() {
+  try {
+    const results = await Promise.all([apiRequest("/analytics"), apiRequest("/internships")]);
+    const snapshot = results[0];
+    document.querySelector("#studentCount").textContent = snapshot.students ?? 0;
+    document.querySelector("#companyCount").textContent = snapshot.companies ?? 0;
+    document.querySelector("#internshipCount").textContent = snapshot.internships ?? 0;
+    renderOpportunities(results[1]);
+    apiStatus.textContent = "Connected to the live SkillBridge backend.";
+    apiStatus.classList.add("connected");
+  } catch (error) {
+    apiStatus.textContent = "Backend unavailable. Start the FastAPI server to use live features.";
+    opportunitiesList.innerHTML = "<p>Could not load opportunities.</p>";
+  }
+}
+
+if (loginForm) {
+  loginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    try {
+      const token = await apiRequest("/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: document.querySelector("#loginEmail").value, password: document.querySelector("#loginPassword").value, role: "student" }) });
+      localStorage.setItem("skillbridge_token", token.access_token);
+      const user = await apiRequest("/auth/me", { headers: { Authorization: "Bearer " + token.access_token } });
+      currentStudentId = user.id;
+      const gaps = await apiRequest("/students/me/skill-gaps", { headers: { Authorization: "Bearer " + token.access_token } });
+      skillGapCount.textContent = gaps.missing_skills.length;
+      authMessage.textContent = "Logged in as " + user.email;
+      loginForm.hidden = true;
+      studentData.hidden = false;
+    } catch (error) {
+      authMessage.textContent = error.message;
+    }
+  });
+}
+
+if (registerForm) {
+  registerForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    try {
+      await apiRequest("/auth/student/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+        name: document.querySelector("#registerName").value,
+        email: document.querySelector("#registerEmail").value,
+        password: document.querySelector("#registerPassword").value,
+        college: document.querySelector("#registerCollege").value,
+        course: document.querySelector("#registerCourse").value,
+        year: Number(document.querySelector("#registerYear").value),
+        skills: document.querySelector("#registerSkills").value
+      }) });
+      document.querySelector("#loginEmail").value = document.querySelector("#registerEmail").value;
+      document.querySelector("#loginPassword").value = document.querySelector("#registerPassword").value;
+      authMessage.textContent = "Account created. Signing you in...";
+      loginForm.requestSubmit();
+    } catch (error) {
+      authMessage.textContent = error.message;
+    }
+  });
+}
+
+document.querySelector("#logoutBtn")?.addEventListener("click", function () {
+  localStorage.removeItem("skillbridge_token");
+  currentStudentId = null;
+  loginForm.hidden = false;
+  studentData.hidden = true;
+  authMessage.textContent = "Log in to see recommendations and skill gaps.";
+});
+document.querySelector("#refreshOpportunities")?.addEventListener("click", loadLiveData);
+loadLiveData();
