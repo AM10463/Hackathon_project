@@ -33,7 +33,7 @@ allNavLinks.forEach(function (link) {
 const personaData = {
   student: {
     headline: "Dream job. So many questions.",
-    image: "../images/student_split.png",
+    image: "images/student_split.png",
     problems: [
       "Will I get my dream job?",
       "Am I learning the exact skills required?",
@@ -49,7 +49,7 @@ const personaData = {
   },
   academician: {
     headline: "Am I teaching what industry really needs?",
-    image: "../images/academician_split.png",
+    image: "images/academician_split.png",
     problems: [
       "Is what I'm teaching relevant to industry?",
       "Am I updating course content often enough?",
@@ -65,7 +65,7 @@ const personaData = {
   },
   industry: {
     headline: "So many resumes. So little real talent.",
-    image: "../images/industry-split.png",
+    image: "images/industry-split.png",
     problems: [
       "How do I find the best candidate for the job?",
       "Are these certificates real or bought online?",
@@ -91,26 +91,30 @@ function renderPersona(role) {
   const data = personaData[role];
   if (!data) return;
 
-  personaHeadline.textContent = data.headline;
+  if (personaHeadline) personaHeadline.textContent = data.headline;
   personaImg.src = data.image;
   personaImg.alt = "Illustration for the " + role + " persona on SkillBridge";
 
   // Rebuild the "Right now" list
-  personaProblems.innerHTML = "";
-  data.problems.forEach(function (line) {
-    const li = document.createElement("li");
-    li.textContent = line;
-    personaProblems.appendChild(li);
-  });
+  if (personaProblems) {
+    personaProblems.innerHTML = "";
+    data.problems.forEach(function (line) {
+      const li = document.createElement("li");
+      li.textContent = line;
+      personaProblems.appendChild(li);
+    });
+  }
 
   // Rebuild the "With SkillBridge" list
-  personaSolutions.innerHTML = "";
-  personaSolutions.classList.add("solutions");
-  data.solutions.forEach(function (line) {
-    const li = document.createElement("li");
-    li.textContent = line;
-    personaSolutions.appendChild(li);
-  });
+  if (personaSolutions) {
+    personaSolutions.innerHTML = "";
+    personaSolutions.classList.add("solutions");
+    data.solutions.forEach(function (line) {
+      const li = document.createElement("li");
+      li.textContent = line;
+      personaSolutions.appendChild(li);
+    });
+  }
 }
 
 personaTabs.forEach(function (tab) {
@@ -132,7 +136,42 @@ personaTabs.forEach(function (tab) {
 // Render the default (student) view on page load
 renderPersona("student");
 
-/* ---------- 3. FAQ accordion ---------- */
+/* ---------- 3. Account tabs ---------- */
+const accountTabs = document.querySelectorAll(".account-tab");
+const accountForms = document.querySelectorAll(".account-form");
+
+accountTabs.forEach(function (tab) {
+  tab.addEventListener("click", function () {
+    const selectedTab = tab.dataset.tab;
+    accountTabs.forEach(function (otherTab) {
+      const isSelected = otherTab === tab;
+      otherTab.classList.toggle("active", isSelected);
+      otherTab.setAttribute("aria-selected", isSelected);
+    });
+    accountForms.forEach(function (form) {
+      form.hidden = form.dataset.panel !== selectedTab;
+    });
+  });
+});
+
+document.querySelectorAll("[data-account-tab]").forEach(function (link) {
+  link.addEventListener("click", function () {
+    const tab = document.querySelector('[data-tab="' + link.dataset.accountTab + '"]');
+    if (tab) tab.click();
+  });
+});
+
+accountForms.forEach(function (form) {
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const note = form.querySelector(".account-note");
+    note.textContent = form.dataset.panel === "login"
+      ? "Welcome back to SkillBridge."
+      : "Your SkillBridge account is ready.";
+  });
+});
+
+/* ---------- 4. FAQ accordion ---------- */
 const faqItems = document.querySelectorAll(".faq-item");
 
 faqItems.forEach(function (item) {
@@ -156,7 +195,7 @@ faqItems.forEach(function (item) {
   });
 });
 
-/* ---------- 4. Hero buttons scroll to the relevant section ---------- */
+/* ---------- 5. Hero buttons scroll to the relevant section ---------- */
 const assessBtn = document.querySelector("#assessBtn");
 const explorePortalsBtn = document.querySelector("#explorePortalsBtn");
 
@@ -172,7 +211,7 @@ if (explorePortalsBtn) {
   });
 }
 
-/* ---------- 5. Backend-connected student workspace ---------- */
+/* ---------- 6. Backend-connected student workspace ---------- */
 const API_BASE = window.location.port === "8000" || window.location.pathname === "/portal"
   ? ""
   : "http://localhost:8000";
@@ -215,6 +254,7 @@ function renderOpportunities(opportunities) {
 }
 
 async function loadLiveData() {
+  if (!apiStatus || !opportunitiesList) return;
   try {
     const results = await Promise.all([apiRequest("/analytics"), apiRequest("/internships")]);
     const snapshot = results[0];
