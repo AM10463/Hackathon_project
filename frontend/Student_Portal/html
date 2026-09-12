@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css">
+<link rel="stylesheet" href="../css">
 </head>
 <body>
 
@@ -21,8 +21,8 @@
       <a href="#how">How it works</a>
       <a href="#faq">FAQ</a>
       <div class="nav-cta">
-        <a href="#account" class="btn btn-ghost" data-account-tab="login">Log in</a>
-        <a href="#account" class="btn btn-primary" data-account-tab="signup">Create account</a>
+        <a href="#" class="btn btn-ghost">Log in</a>
+        <a href="#" class="btn btn-primary">Create account</a>
       </div>
     </nav>
 
@@ -36,75 +36,147 @@
 
   <!-- HERO -->
   <section class="hero" id="top">
-    <p class="hero-eyebrow">For future-ready talent</p>
-    <h1 class="hero-title">SKILLBRIDGE<span class="dot">.</span></h1>
-    <p class="hero-sub">Build <mark>real skills</mark>, identify <mark>skill gaps</mark>, and connect with <mark>verified career paths</mark> before everyone else catches up.</p>
-
-    <div class="hero-photo-wrap">
-      <img src="images/student_split.png" alt="Student skill journey illustration" class="hero-photo">
-    </div>
-    <div class="hero-actions">
-      <button class="btn btn-primary btn-lg" id="assessBtn">ASSESS MY SKILLS</button>
-      <button class="btn btn-hero-green" id="explorePortalsBtn">ACCESS PORTALS / GET VERIFIED ⚡</button>
-    </div>
-  </section>
-
-  <!-- ACCOUNT: LOG IN / CREATE ACCOUNT -->
-  <section class="account" id="account">
-    <div class="account-card">
-      <div class="account-tabs" role="tablist">
-        <button class="account-tab active" data-tab="login" role="tab" aria-selected="true">Log in</button>
-        <button class="account-tab" data-tab="signup" role="tab" aria-selected="false">Create account</button>
+    <div class="hero-copy">
+      <p class="eyebrow">Smart India Hackathon &middot; Problem 44</p>
+      <h1>Turn skills into opportunities, not just certificates.</h1>
+      <p class="hero-sub">SkillBridge connects students, academia and industry through honest skill assessment, real skill-gap mapping and verified profiles — so hiring stops running on guesswork.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" id="assessBtn">Assess my skills</button>
+        <button class="btn btn-outline btn-lg" id="explorePortalsBtn">Explore the three portals</button>
       </div>
+      <div class="hero-stats">
+        <div><strong>3</strong><span>roles, one platform</span></div>
+        <div><strong>Skills</strong><span>over certificates</span></div>
+        <div><strong>Live</strong><span>industry-aligned data</span></div>
+      </div>
+    </div>
 
-      <form class="account-form" id="loginForm" data-panel="login">
-        <label for="loginUsername">Username</label>
-        <input type="text" id="loginUsername" name="username" placeholder="Enter your username" autocomplete="username" required>
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 520 460" class="bridge-graph">
+        <defs>
+<linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb"/>
+            <stop offset="100%" stop-color="#10b981"/>
+          </linearGradient>
+        </defs>
 
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+        <path class="graph-line" d="M110,110 C 200,180 220,220 260,230" />
+        <path class="graph-line" d="M410,110 C 320,180 300,220 260,230" />
+        <path class="graph-line" d="M110,350 C 200,280 220,250 260,230" />
+        <path class="graph-line" d="M410,350 C 320,280 300,250 260,230" />
 
-        <button type="submit" class="btn btn-primary btn-lg account-submit">Log in</button>
-        <p class="account-note" id="loginNote"></p>
-      </form>
+        <g class="node node-center">
+          <circle cx="260" cy="230" r="46"/>
+          <text x="260" y="225">SKILL</text>
+          <text x="260" y="243">BRIDGE</text>
+        </g>
 
-      <form class="account-form" id="signupForm" data-panel="signup" hidden>
-        <label for="signupUsername">Username</label>
-        <input type="text" id="signupUsername" name="username" placeholder="Choose a username" autocomplete="username" required>
-
-        <label for="signupPassword">Password</label>
-        <input type="password" id="signupPassword" name="password" placeholder="Choose a password" autocomplete="new-password" required>
-
-        <button type="submit" class="btn btn-primary btn-lg account-submit">Create account</button>
-        <p class="account-note" id="signupNote"></p>
-      </form>
+        <g class="node node-role">
+          <circle cx="110" cy="110" r="38"/>
+          <text x="110" y="115">STUDENT</text>
+        </g>
+        <g class="node node-role">
+          <circle cx="410" cy="110" r="38"/>
+          <text x="410" y="115">INDUSTRY</text>
+        </g>
+        <g class="node node-role">
+          <circle cx="110" cy="350" r="38"/>
+          <text x="110" y="355">ACADEMIA</text>
+        </g>
+        <g class="node node-role">
+          <circle cx="410" cy="350" r="38"/>
+          <text x="410" y="355">MENTORS</text>
+        </g>
+      </svg>
     </div>
   </section>
 
   <!-- PERSONA SWITCHER -->
   <section class="personas" id="personas">
     <div class="section-head">
-
       <h2>One platform. Three very different Monday mornings.</h2>
       <p>Tap a role to see what changes for them.</p>
     </div>
 
     <div class="persona-tabs" id="personaTabs" role="tablist">
       <button class="persona-tab active" data-role="student" role="tab" aria-selected="true">Student</button>
- <button class="persona-tab" data-role="academician" role="tab" aria-selected="false">Academician</button>
+      <button class="persona-tab" data-role="academician" role="tab" aria-selected="false">Academician</button>
       <button class="persona-tab" data-role="industry" role="tab" aria-selected="false">Industry</button>
     </div>
 
     <div class="persona-panel">
-      <img id="personaImg" class="persona-image-full" src="images/student_split.png" alt="Split illustration showing a student's worries next to the SkillBridge solution">
-      <div class="persona-text" hidden>
-        <h3 id="personaHeadline"></h3>
-        <ul id="personaProblems"></ul>
-        <ul id="personaSolutions"></ul>
+      <div class="persona-image">
+        <img id="personaImg" src="../images/student_split.png" alt="Split illustration showing a student's worries next to the SkillBridge solution">
+  </div>
+
+      <div class="persona-text">
+        <h3 id="personaHeadline">Dream job. So many questions.</h3>
+
+        <div class="persona-columns">
+          <div>
+            <h4>Right now</h4>
+            <ul id="personaProblems"></ul>
+          </div>
+          <div>
+            <h4>With SkillBridge</h4>
+            <ul id="personaSolutions"></ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- LIVE PORTAL -->
+  <section class="live-portal" id="livePortal">
+    <div class="section-head">
+      <p class="eyebrow">Connected workspace</p>
+      <h2>See the platform working with live data.</h2>
+      <p id="apiStatus" class="api-status">Connecting to SkillBridge...</p>
+    </div>
+    <div class="live-grid">
+      <div class="live-card">
+        <h3>Platform snapshot</h3>
+        <div class="snapshot-grid">
+          <div><strong id="studentCount">-</strong><span>students</span></div>
+          <div><strong id="companyCount">-</strong><span>companies</span></div>
+          <div><strong id="internshipCount">-</strong><span>opportunities</span></div>
+        </div>
+      </div>
+      <div class="live-card auth-card">
+        <h3>Student workspace</h3>
+        <p id="authMessage">Log in to see recommendations and skill gaps.</p>
+        <form id="loginForm" class="login-form">
+          <input id="loginEmail" type="email" placeholder="Email" required>
+          <input id="loginPassword" type="password" placeholder="Password" required>
+          <button class="btn btn-primary" type="submit">Log in</button>
+        </form>
+        <details class="register-details">
+          <summary>Create a student account</summary>
+          <form id="registerForm" class="register-form">
+            <input id="registerName" placeholder="Full name" required>
+            <input id="registerEmail" type="email" placeholder="Email" required>
+            <input id="registerPassword" type="password" placeholder="Password" required>
+            <input id="registerCollege" placeholder="College" required>
+            <input id="registerCourse" placeholder="Course" required>
+            <input id="registerYear" type="number" min="1" max="4" placeholder="Year" required>
+            <input id="registerSkills" placeholder="Skills, comma separated">
+            <button class="btn btn-outline" type="submit">Create account</button>
+          </form>
+        </details>
+        <div id="studentData" class="student-data" hidden>
+          <div><strong id="skillGapCount">0</strong><span>skill gaps</span></div>
+          <button id="logoutBtn" class="btn btn-outline" type="button">Log out</button>
+        </div>
+      </div>
+    </div>
+    <div class="live-card opportunities-card">
+      <div class="opportunities-head">
+        <div><h3>Open opportunities</h3><p>Live internships from the backend.</p></div>
+        <button id="refreshOpportunities" class="btn btn-outline" type="button">Refresh</button>
+      </div>
+      <div id="opportunitiesList" class="opportunities-list"><p>Loading opportunities...</p></div>
+    </div>
+  </section>
 
   <!-- PATHWAY -->
   <section class="pathway" id="pathway">
@@ -113,7 +185,7 @@
       <h2>Prepare for a stronger tomorrow</h2>
       <p>Bridging the gap between academia, industry and students — because the future needs skilled, job-ready talent.</p>
     </div>
-    <img class="pathway-img" src="images/path-comparison.png" alt="Comparison of the traditional certificate-based path against the SkillBridge skill-first path">
+    <img class="pathway-img" src="../images/path-comparison.png" alt="Comparison of the traditional certificate-based path against the SkillBridge skill-first path">
   </section>
 
   <!-- FLOW -->
@@ -138,7 +210,7 @@
     </div>
 
     <div class="faq-list" id="faqList">
-      <div class="faq-item">
+<div class="faq-item">
         <button class="faq-q">
           <span>What is SkillBridge, in one line?</span>
           <span class="faq-icon">+</span>
@@ -190,12 +262,10 @@
 
 </main>
 
-[12/09/26, 6:23:14 AM] Prithviraj Mandal Dgp 322: <footer class="footer">
+<footer class="footer">
   <div class="footer-inner">
     <div>
-      <div class="logo">
-        SkillBridge<span class="dot">.</span>
-      </div>
+      <div class="logo">SkillBridge<span class="dot">.</span></div>
       <p class="footer-tag">Grow. Learn. Get hired.</p>
     </div>
     <div class="footer-cols">
@@ -216,6 +286,6 @@
   <p class="footer-bottom">Built for Smart India Hackathon — Problem Statement 44, Academia&ndash;Industry Collaboration Portal.</p>
 </footer>
 
-<script src="JavaScript"></script>
+<script src="../JavaScript"></script>
 </body>
 </html>
